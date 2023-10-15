@@ -2,7 +2,6 @@
 
 var requestUrl = "https://api.zippopotam.us/us/mn/wahkon"
 
-
 fetch(requestUrl)
   .then(function (response) {
     return response.json();
