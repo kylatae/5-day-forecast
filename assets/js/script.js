@@ -20,9 +20,8 @@ fetch(requestUrl)
     latitude = data.places[0].latitude
 
     var dataChain = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=90c25e8ed0269e4611e2fc4c244375bc&units=imperial`;
-    var dataChain2 = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=90c25e8ed0269e4611e2fc4c244375bc&units=imperial`;
     console.log (dataChain)
-    return dataChain, dataChain2;
+    return dataChain;
 
   })
   .then(function(dataChain){
@@ -51,8 +50,8 @@ fetch(requestUrl)
       return dataChain
     })
   })
-  .then(function(dataChain){
-    fetch(dataChain)
+  .then(function(dataChain2){
+    fetch(dataChain2)
     .then(function(response){
       return response.json();
     })
