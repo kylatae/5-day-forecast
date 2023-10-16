@@ -3,7 +3,9 @@ var forecast = [];
 var requestUrl = "https://api.zippopotam.us/us/mn/wahkon"
 var todayC = (`#todayW`)
 var forecastW = (`#forecastW`)
-
+var cityHistory = []
+var latitude
+var longitude
 
 fetch(requestUrl)
   .then(function (response) {
@@ -14,19 +16,47 @@ fetch(requestUrl)
     city = data['place name']
     var stateab = data['state abbreviation']
     var zipcode = data.places[0]['post code']
-    var longitude =data.places[0].longitude
-    var latitude = data.places[0].latitude
+    longitude =data.places[0].longitude
+    latitude = data.places[0].latitude
 
-    var dataChain = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=90c25e8ed0269e4611e2fc4c244375bc&units=imperial&`;
-    return dataChain;
+    var dataChain = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=90c25e8ed0269e4611e2fc4c244375bc&units=imperial`;
+    var dataChain2 = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=90c25e8ed0269e4611e2fc4c244375bc&units=imperial`;
+    console.log (dataChain)
+    return dataChain, dataChain2;
 
   })
-  .then( function(dataChain){
+  .then(function(dataChain){
     fetch(dataChain)
-    .then( function(response){
+    .then(function(response){
       return response.json();
     })
-    .then( function(wData){
+    .then(function(tData){
+      var tDate = tData.dt
+      var date = dayjs(tDate*1000).format('M/D/YY')
+      var weatherT = tData.weather[0].icon
+      var temp = tData.main.temp
+      var windS = tData.wind.speed
+      var humid = tData.main.humidity
+      var row = `<div class="card card-block" style="width: 100%">
+      <label><h1> ${city} - ${date} <img src="https://openweathermap.org/img/wn/${weatherT}.png" width="70 height="70"/></h1></label>
+      <label>Temperature: ${temp}F</label>
+      <label>Wind Speed: ${windS}mph</label>
+      <label>Humidity: ${humid}%</label>
+      </div>
+      `;
+      $(todayC).append(row);
+
+      var dataChain2 = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=90c25e8ed0269e4611e2fc4c244375bc&units=imperial`;
+      console.log (dataChain)
+      return dataChain
+    })
+  })
+  .then(function(dataChain){
+    fetch(dataChain)
+    .then(function(response){
+      return response.json();
+    })
+    .then(function(wData){
       console.log(wData)
       for (i = 1; i < 6; i++){
         var arrID = (i*8)-4
@@ -65,8 +95,21 @@ fetch(requestUrl)
       }
 
     })
-  });
+   })
 
 
 
 
+  $('.citySearch').on("click","#sbtn",function(event){
+    
+    sText = [$(this).siblings('.sbox').val()]
+    console.log (sText)
+
+    cityHistory = JSON.parse(localStorage.getItem('cityHistory'));
+    if (cityHistory === null) localStorage.setItem('cityHistory', JSON.stringify(sText));
+    else{
+      cityHistory = [...cityHistory, ...sText]
+      localStorage.setItem('cityHistory', JSON.stringify(cityHistory));
+     }
+
+  })
