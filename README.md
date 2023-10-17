@@ -8,7 +8,7 @@ Simple weather forecast search that allows you to find a city by city and state 
 
 ### Preview Page
 
-![site review](./assets/images/readme.png)
+![site review](./assets/img/readme.png)
 
 Page Link:[https://kylatae.github.io/5_day_forecast/](https://kylatae.github.io/5_day_forecast/) 
 
